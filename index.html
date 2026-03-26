@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Date Invite 💌</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: linear-gradient(135deg, #ffd6e7, #ffeccf);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      color: #d63384;
+    }
+
+    button {
+      margin: 10px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      background: #ff4d88;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .no-btn {
+      background: #ddd;
+      color: black;
+      position: relative;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <!-- SCREEN 1 -->
+  <div id="screen1">
+    <h1>Do you want to go on a date with me? 💌</h1>
+    <button onclick="yes()">Yes 💖</button>
+    <button class="no-btn" id="noBtn">No 😶</button>
+  </div>
+
+  <!-- SCREEN 2 -->
+  <div id="screen2" class="hidden">
+    <h1>Yayyy 💕</h1>
+    <button onclick="next()">Let’s plan it</button>
+  </div>
+
+  <!-- SCREEN 3 -->
+  <div id="screen3" class="hidden">
+    <h1>Plan our date ✨</h1>
+
+    <input type="text" id="time" placeholder="When are you available?" required>
+
+    <select id="place">
+      <option value="">Choose place</option>
+      <option>Park 🌳</option>
+      <option>Arcade 🎮</option>
+      <option>Billiard 🎱</option>
+      <option>Tennis 🎾 (Teach me)</option>
+      <option>Museum 🏛️</option>
+      <option value="other">Other</option>
+    </select>
+
+    <input type="text" id="otherPlace" placeholder="Your idea..." class="hidden">
+
+    <textarea id="message" placeholder="Any message?"></textarea>
+
+    <button onclick="finish()">Finish 💖</button>
+  </div>
+
+  <!-- SCREEN 4 -->
+  <div id="screen4" class="hidden">
+    <h1>It’s a date 💖</h1>
+    <div id="result"></div>
+  </div>
+
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+
+// 💥 IMPOSSIBLE BUTTON
+const texts = ["No 😶", "Are you sure? 😳", "Really? 😏", "Last chance 😈"];
+
+document.addEventListener("mousemove", (e) => {
+  const rect = noBtn.getBoundingClientRect();
+
+  const dx = e.clientX - (rect.left + rect.width / 2);
+  const dy = e.clientY - (rect.top + rect.height / 2);
+  const distance = Math.sqrt(dx * dx + dy * dy);
+
+  if (distance < 120) {
+    const moveX = (Math.random() - 0.5) * 400;
+    const moveY = (Math.random() - 0.5) * 300;
+
+    noBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
+
+    noBtn.textContent = texts[Math.floor(Math.random() * texts.length)];
+  }
+});
+
+// FLOW
+function yes() {
+  document.getElementById("screen1").classList.add("hidden");
+  document.getElementById("screen2").classList.remove("hidden");
+}
+
+function next() {
+  document.getElementById("screen2").classList.add("hidden");
+  document.getElementById("screen3").classList.remove("hidden");
+}
+
+// OTHER PLACE
+const place = document.getElementById("place");
+const otherPlace = document.getElementById("otherPlace");
+
+place.addEventListener("change", function() {
+  otherPlace.classList.toggle("hidden", this.value !== "other");
+});
+
+// FINISH
+function finish() {
+  const time = document.getElementById("time").value;
+  const placeValue = place.value === "other" ? otherPlace.value : place.value;
+  const message = document.getElementById("message").value;
+
+  document.getElementById("screen3").classList.add("hidden");
+  document.getElementById("screen4").classList.remove("hidden");
+
+  document.getElementById("result").innerHTML = `
+    <p><strong>Time:</strong> ${time}</p>
+    <p><strong>Place:</strong> ${placeValue}</p>
+    <p><strong>Message:</strong> ${message || "No message 😏"}</p>
+  `;
+}
+</script>
+
+</body>
+</html>
